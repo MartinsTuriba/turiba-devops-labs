@@ -28,7 +28,7 @@ app.get('/api/todos', async (req, res) => {
   const { rows } = await pool.query(
     'SELECT id, title, done, created_at FROM todos ORDER BY id'
   );
-  res.json(rows);
+  res.json(row);
 });
 
 app.post('/api/todos', async (req, res) => {
