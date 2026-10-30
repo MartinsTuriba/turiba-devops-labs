@@ -97,3 +97,6 @@ process.on('SIGTERM', () => {
   console.log('SIGTERM received, closing the server');
   server.close(() => pool.end().then(() => process.exit(0)));
 });
+
+// Startup banner
+require('./banner');
