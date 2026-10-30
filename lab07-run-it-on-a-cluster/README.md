@@ -234,7 +234,8 @@ Then run `kubectl apply -f k8s/` and `kubectl -n course rollout status deploymen
 **3a · A newer version.** Change the image tag in `k8s/api-deployment.yaml` to a newer image of yours, through a PR, then apply it and watch the rolling update finish.
 
 - **Your newest image:** CI pushes `ghcr.io/<you>/turiba-devops-labs/api:<commit SHA>` for every commit on `main` (Lab 5). `git log -1 --format=%H origin/main` gives you the SHA of the newest one.
-- **Fallback users:** roll from `0.2.0` to `ghcr.io/martinsturiba/turiba-devops-labs/api:⟨newer tag, filled in after the test run⟩`.
+- **Fallback users:** roll from `0.2.0` to `ghcr.io/martinsturiba/turiba-devops-labs/api:a24ab0775c358e9a3fe77bfc8bc0379148a5af1b`.
+- **Wait for the green `ci` run on `main`** after your merge. The image for a commit exists only once that run has pushed it. Too early, and the rollout stalls on `ErrImagePull`.
 
 **3b · A broken version, and back.** On your working copy only, without committing:
 
@@ -351,7 +352,8 @@ The PR's **Files changed** tab shows every line the teammate touched. For each l
 | `Error from server (NotFound): … namespaces "course" not found` on the first `apply` | The Deployment was applied before the Namespace | Name the Namespace file `00-namespace.yaml` (slide 10) |
 | `kubectl` shows objects you don't know, or none at all | It's talking to another cluster, or another namespace | `kubectl config current-context` must say `kind-kind`; add `-n course` |
 | `ErrImagePull` / `ImagePullBackOff` on **your** image | The path has capitals, the tag doesn't exist, or the package is private | Lowercase path; `docker buildx imagetools inspect <image>`; Lab 5, step 3.3: make the package public |
-| `apply` rejects your Service and the error mentions `targetPort` | `targetPort: "5000"` in quotes is read as a port **name**, and a name can't be all digits | Write `targetPort: 5000` without quotes |
+| `The Service "api" is invalid: spec.ports[0].targetPort: Invalid value: "5000": must contain at least one letter (a-z)` | `targetPort: "5000"` in quotes is read as a port **name**, and a name can't be all digits | Write `targetPort: 5000` without quotes |
+| `port-forward service/api` prints nothing at all and just waits | The Service's selector matches no Pod, so there is nothing to forward to | `kubectl -n course get endpointslices -l kubernetes.io/service-name=api`; compare the selector with the Pod labels (slide 8) |
 | `port-forward`: `unable to forward port because pod is not running` | The Pods aren't ready yet | `kubectl -n course rollout status deployment/api`, then start the port-forward |
 | `port-forward`: `address already in use` | Another port-forward still runs | Stop it with Ctrl+C, or use `8081:80` |
 | `curl: (52) Empty reply from server`, and the port-forward prints `connection refused` | The Service sends traffic to a port nothing listens on | `targetPort` must be `5000` |
