@@ -1,0 +1,5 @@
+# 00- so that one `kubectl apply -f k8s/` creates the Namespace first (files are applied in name order).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: course

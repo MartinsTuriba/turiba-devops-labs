@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: course
+  labels:
+    app: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api                # must equal the Pod template's labels below
+  template:
+    metadata:
+      labels:
+        app: api              # the Service selects these too
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/martinsturiba/turiba-devops-labs/api:0.2.0   # a version, never latest
+          ports:
+            - containerPort: 5000
