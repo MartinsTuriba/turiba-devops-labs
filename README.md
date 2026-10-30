@@ -12,6 +12,7 @@ Lab guides for **Software Development and IT Operations (DevOps)**, course ELE10
 | 4 | S4 · Multi-service apps with Docker Compose | [Multi-service app with Compose](lab04-multi-service-compose/README.md) | The URL of your fork on Evaluentis: compose.yaml, .env.example, web/nginx.conf, lab4/README.md and lab4/clinic/ on main, merged through a PR in your fork. Due Tue 20 Oct, 22:00 |
 | 5 | S5 · Continuous Integration I | [Your first CI pipeline](lab05-ci-pipeline/README.md) | The URL of your fork on Evaluentis: a green CI pipeline on main, an image on GHCR, four required checks, a red-then-green PR, and lab5/README.md. Due Wed 21 Oct, 22:00 |
 | 6 | S6 · Continuous Integration II | [Test what you ship, ship a release](lab06-test-and-release/README.md) | The URL of your fork on Evaluentis: a smoke test in your image job, a red-then-green break-fix PR, release v0.2.0 with its image, and lab6/README.md. Due Tue 3 Nov, 22:00 |
+| 7 | S7 · Kubernetes I | [Run it on a cluster](lab07-run-it-on-a-cluster/README.md) | The URL of your fork on Evaluentis: k8s/ with a Namespace, a Deployment and a Service that one apply turns into a working app, a merged break-fix PR, and lab7/README.md. Due Tue 10 Nov, 22:00 |
 
 The next lab guide is published here before its session.
 
