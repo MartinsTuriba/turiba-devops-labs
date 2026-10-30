@@ -389,7 +389,7 @@ def main(argv=None):
     if not fork or not re.fullmatch(r'[A-Za-z0-9-]+/[A-Za-z0-9._-]+', fork):
         print('✘ I could not tell which fork to check. Run it in your clone, or add --repo <you>/turiba-devops-labs')
         return 2
-    if fork.lower() == args.course.lower():
+    if fork.lower() == COURSE.lower():
         print("✘ origin points to the course repo, not to your fork. Add --repo <you>/turiba-devops-labs")
         return 2
     owner, repo = fork.split('/')

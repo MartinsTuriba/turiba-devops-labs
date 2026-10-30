@@ -196,7 +196,7 @@ Open the red check, then the failed step, and read the container log your smoke 
 
 <details><summary>🛠 Fix</summary>
 
-The commit added `banner.js` to `api/.dockerignore`. Delete those two lines, commit (`fix(api): keep banner.js in the image`) and push. If your Dockerfile copies files by name (`COPY server.js db.js validate.js ./`), add `banner.js` to that line too.
+The commit added `banner.js` to `api/.dockerignore`. Delete **only those two lines**, commit (`fix(api): keep banner.js in the image`) and push. Don't delete the whole `.dockerignore`: `image` would go green too, but `.env` and `node_modules` would end up in your image. If your Dockerfile copies files by name (`COPY server.js db.js validate.js ./`), add `banner.js` to that line too.
 </details>
 
 ✅ **Checkpoint:** the PR's first commit has a red `image` check, red in the **smoke** step, with `lint`, `unit` and `integration` green. Its last commit has all four green, and the PR is merged.
@@ -328,7 +328,8 @@ jobs:
 | You see | Why | Fix |
 |---------|-----|-----|
 | The smoke build fails with an error about exporting a manifest list or multiple platforms | `load: true` with two platforms | The smoke build has no `platforms:` line: one platform, the runner's |
-| `curl: (7) Failed to connect to localhost port 5000` once, then the step passes | The API needs a moment to start | That's what `--retry` is for. If every try fails, read the `docker logs` output under it |
+| `curl: (56) Recv failure: Connection reset by peer` or `curl: (7) Failed to connect to localhost port 5000` once, then the step passes | The API needs a moment to start | That's what `--retry` is for. If every try fails, read the `docker logs` output under it |
+| `image` turned green after you deleted `api/.dockerignore` | Without it, everything goes into the image, including `banner.js` | Put `.dockerignore` back (`git checkout main -- api/.dockerignore`) and delete only the two `banner.js` lines. Otherwise `.env` and `node_modules` are in your image |
 | The smoke step fails, and `docker logs` shows `Cannot find module` | A file is missing from the image | That's Part 2's lesson: check `api/.dockerignore` and the `COPY` lines in `api/Dockerfile` |
 | After your Part 2 fix, the image still crashes with `Cannot find module './banner'` | Your Dockerfile copies files by name | Add `banner.js` to that `COPY` line as well |
 | `break.sh` says `✘ …` | It refuses rather than guess | Do what the line says. It changed nothing |
