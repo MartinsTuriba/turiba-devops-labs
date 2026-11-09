@@ -3,20 +3,40 @@ kind: Deployment
 metadata:
   name: api
   namespace: course
-  labels:
-    app: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: api                # must equal the Pod template's labels below
+      app: api
   template:
     metadata:
       labels:
-        app: api              # the Service selects these too
+        app: api
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ["sh", "-c", "until pg_isready -h \"$DB_HOST\" -p \"$DB_PORT\"; do echo waiting for the database; sleep 2; done"]
+          envFrom:
+            - configMapRef: { name: app-config }
       containers:
         - name: api
-          image: ghcr.io/martinsturiba/turiba-devops-labs/api:a24ab0775c358e9a3fe77bfc8bc0379148a5af1b   # a version, never latest
+          image: ghcr.io/martinsturiba/turiba-devops-labs/api:a24ab0775c358e9a3fe77bfc8bc0379148a5af1b
           ports:
             - containerPort: 5000
+          envFrom:
+            - configMapRef: { name: app-config }
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: db-secret, key: password }
+          readinessProbe:
+            httpGet: { path: /healthz, port: 5000 }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: 5000 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: 500m, memory: 128Mi }
