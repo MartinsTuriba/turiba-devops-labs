@@ -31,7 +31,7 @@ spec:
               valueFrom:
                 secretKeyRef: { name: db-secret, key: password }
           readinessProbe:
-            httpGet: { path: /healthz, port: 5001 }
+            httpGet: { path: /healthz, port: 5000 }
             periodSeconds: 5
           livenessProbe:
             httpGet: { path: /healthz, port: 5000 }
