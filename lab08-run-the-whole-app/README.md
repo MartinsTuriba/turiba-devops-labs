@@ -391,12 +391,6 @@ Delete the `db` Pod (`kubectl -n course get pods -l app=db` gives its name), wai
 - Give the liveness probes an `initialDelaySeconds` (10 for the API, 30 for PostgreSQL). A database needs time on its first start.
 - The values on slide 12 worked in the test cluster.
 
-**An experiment, on your working copy only.** Point the API's **liveness** probe at `/nope`, then run `kubectl apply -f k8s/`.
-
-🔮 **Predict** (📝 section 3): will those Pods get traffic? Will they be restarted?
-
-Watch `kubectl -n course get pods -l app=api` for about a minute, and `describe` one of the new Pods. Then make Git and the cluster agree again: `git restore k8s/ && kubectl apply -f k8s/`.
-
 <details><summary>🔎 Look</summary>
 
 Slide 9 has both probes for both containers, and slide 12 has `resources`. The Kubernetes task page "Configure Liveness, Readiness and Startup Probes" shows `httpGet` and `exec` probes.
@@ -461,6 +455,15 @@ The Pods wait while the Secret is missing, then start by themselves (slide 6).
 - `GET /api/todos` answers through the port-forward.
 - The change reaches `main` through a PR.
 - `bash lab08-run-the-whole-app/check.sh` shows ✔ for G2 and G3.
+
+**Then an experiment, only after your Part 3 PR is merged.** Run `git switch main && git pull`. `git status` must say `nothing to commit`, because the last step throws away every uncommitted change in `k8s/`.
+
+1. Point the API's **liveness** probe at `/nope`, without committing, and run `kubectl apply -f k8s/`.
+2. 🔮 **Predict** (📝 section 3): will those Pods get traffic? Will they be restarted?
+3. Watch `kubectl -n course get pods -l app=api` for about a minute, and `describe` one of the new Pods.
+4. Make Git and the cluster agree again: `git restore k8s/ && kubectl apply -f k8s/`. Afterwards, `git diff` is empty.
+
+📝 Section 3: `get pods` after about a minute, the Events, your prediction, and how you made Git and the cluster agree.
 
 ---
 
